@@ -44,7 +44,7 @@
 Нужен только [Docker Desktop](https://www.docker.com/products/docker-desktop/) (выделите ему 6+ ГБ RAM).
 
 ```bash
-git clone <repo-url> && cd resume-screener
+git clone https://github.com/vadik12555/resume-screener.git && cd resume-screener
 cp .env.example .env
 docker compose up --build
 ```
