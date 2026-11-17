@@ -1,0 +1,104 @@
+{% load ui %}
+<div id="candidate-body" {% if c.is_active %}hx-get="{% url 'candidate_detail' c.pk %}" hx-trigger="every 3s" hx-swap="outerHTML"{% endif %}>
+  <div class="mt-3 flex flex-wrap items-center justify-between gap-6 card p-6">
+    <div class="flex items-center gap-5">
+      <div class="relative h-24 w-24 shrink-0">
+        <svg class="h-24 w-24 -rotate-90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#f1f5f9" stroke-width="10"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="{{ c.score|score_stroke }}" stroke-width="10" stroke-linecap="round"
+                  stroke-dasharray="251.33" stroke-dashoffset="{{ c.score|ring_offset }}"/>
+        </svg>
+        <div class="absolute inset-0 grid place-items-center">
+          <span class="text-2xl font-bold">{% if c.score is not None %}{{ c.score }}{% else %}—{% endif %}</span>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">{{ c.display_name }}{% if c.age %}<span class="font-medium text-slate-400">, {{ c.age_label }}</span>{% endif %}</h1>
+        <p class="mt-1 text-sm font-medium text-slate-700">{{ c.position }}{% if c.city %} · {{ c.city }}{% endif %}{% if c.experience_label %} · {{ c.experience_label }}{% endif %}</p>
+        {% if c.skills %}
+        <div class="mt-2.5 flex flex-wrap gap-1.5">
+          {% for s in c.skills %}<span class="rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-100">{{ s }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <p class="mt-2 text-xs text-slate-400">{{ c.original_filename|default:"резюме" }} · загружено {{ c.created_at|date:"j E, H:i" }}</p>
+        {% if c.summary %}<p class="mt-2 max-w-xl text-sm leading-relaxed text-slate-700">{{ c.summary }}</p>{% endif %}
+      </div>
+    </div>
+    {% include "candidates/_decision.html" %}
+  </div>
+
+  {% if c.processing == 'error' %}
+  <div class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-rose-200 bg-rose-50 p-5">
+    <div>
+      <p class="font-semibold text-rose-800">Не удалось проанализировать резюме</p>
+      <p class="mt-1 text-sm text-rose-700">{{ c.error }}</p>
+    </div>
+    <form method="post" action="{% url 'candidate_retry' c.pk %}">{% csrf_token %}
+      <button class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-500">Повторить анализ</button>
+    </form>
+  </div>
+  {% elif c.is_active %}
+  <div class="mt-6 flex items-center gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-sm font-medium text-indigo-800">
+    <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
+    ИИ анализирует резюме — результат появится здесь автоматически.
+  </div>
+  {% endif %}
+
+  {% if c.processing == 'done' %}
+  <div class="mt-6 grid gap-6 md:grid-cols-2">
+    <div class="card p-6">
+      <h2 class="flex items-center gap-2 font-semibold"><span class="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 text-emerald-600">✓</span> Сильные стороны</h2>
+      <ul class="mt-4 space-y-2.5">
+        {% for s in c.strengths %}<li class="flex gap-2.5 text-sm text-slate-700"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500"></span>{{ s }}</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="card p-6">
+      <h2 class="flex items-center gap-2 font-semibold"><span class="grid h-7 w-7 place-items-center rounded-lg bg-amber-50 text-amber-600">!</span> Чего не хватает</h2>
+      <ul class="mt-4 space-y-2.5">
+        {% for g in c.gaps %}<li class="flex gap-2.5 text-sm text-slate-700"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500"></span>{{ g }}</li>
+        {% empty %}<li class="text-sm text-slate-500">Покрывает все требования вакансии 🎉</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-6 card p-6">
+    <h2 class="flex items-center gap-2 font-semibold"><span class="grid h-7 w-7 place-items-center rounded-lg bg-indigo-50 text-indigo-600">?</span> Вопросы для собеседования</h2>
+    <ol class="mt-4 space-y-3">
+      {% for q in c.questions %}
+      <li class="flex gap-3 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+        <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-indigo-600 text-xs font-bold text-white">{{ forloop.counter }}</span>{{ q }}
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  <div class="mt-6 card p-6">
+    <div class="flex items-center justify-between">
+      <h2 class="flex items-center gap-2 font-semibold"><span class="grid h-7 w-7 place-items-center rounded-lg bg-slate-100 text-slate-600">✎</span> Заметки HR</h2>
+      <span id="notes-status" class="text-xs text-slate-400">Сохраняются автоматически</span>
+    </div>
+    <textarea name="notes" rows="3" placeholder="Впечатления после звонка, зарплатные ожидания, договорённости…"
+              hx-post="{% url 'candidate_notes' c.pk %}" hx-trigger="input changed delay:800ms" hx-target="#notes-status"
+              class="mt-4 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100">{{ c.notes }}</textarea>
+  </div>
+
+  {% if c.resume_text %}
+  <details class="group mt-6 card">
+    <summary class="flex cursor-pointer items-center justify-between p-6 font-semibold">
+      Исходное резюме
+      <span class="text-sm font-normal text-slate-500 group-open:hidden">Показать ↓</span>
+      <span class="hidden text-sm font-normal text-slate-500 group-open:inline">Скрыть ↑</span>
+    </summary>
+    <div class="border-t border-slate-100 p-6">
+      {% if c.file %}<a href="{{ c.file.url }}" class="mb-4 inline-flex text-sm font-medium text-indigo-600 hover:text-indigo-500">Скачать оригинал файла ↓</a>{% endif %}
+      <pre class="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-700">{{ c.resume_text }}</pre>
+    </div>
+  </details>
+  {% endif %}
+
+  <form method="post" action="{% url 'candidate_delete' c.pk %}" class="mt-6 text-right"
+        onsubmit="return confirm('Удалить кандидата?')">{% csrf_token %}
+    <button class="text-sm text-slate-400 hover:text-rose-600">Удалить кандидата</button>
+  </form>
+</div>

@@ -1,0 +1,6 @@
+{% extends "app.html" %}
+{% block title %}{{ c.display_name }}{% endblock %}
+{% block content %}
+<a href="{% url 'vacancy_detail' c.vacancy_id %}" class="text-sm text-slate-500 hover:text-slate-900">← {{ c.vacancy.title }}</a>
+{% include "candidates/_detail_body.html" %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="flex min-h-full">
+  <div class="flex flex-1 flex-col justify-center px-6 py-12">
+    <div class="mx-auto w-full max-w-sm">
+      {% include "partials/logo.html" %}
+      <h1 class="mt-10 text-2xl font-bold tracking-tight">{% block heading %}{% endblock %}</h1>
+      <p class="mt-2 text-sm text-slate-500">{% block subheading %}{% endblock %}</p>
+      <form method="post" class="mt-8 space-y-5" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{{ form.non_field_errors|join:" " }}</div>
+        {% endif %}
+        {% for field in form %}
+          {% include "partials/field.html" %}
+        {% endfor %}
+        <button class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">{% block submit %}{% endblock %}</button>
+      </form>
+      <p class="mt-6 text-center text-sm text-slate-500">{% block footer %}{% endblock %}</p>
+    </div>
+  </div>
+  <div class="relative hidden flex-1 overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600 lg:block">
+    <div class="absolute inset-0 opacity-20" style="background-image:radial-gradient(circle at 1px 1px,#fff 1px,transparent 0);background-size:24px 24px"></div>
+    <div class="relative flex h-full flex-col justify-end p-14 text-white">
+      <p class="text-3xl font-bold leading-snug">Первичный отбор — за минуты, а не за дни.</p>
+      <ul class="mt-6 space-y-3 text-indigo-50">
+        <li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 text-xs">✓</span>Оценка 0–100 по требованиям вакансии</li>
+        <li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 text-xs">✓</span>Сильные стороны, пробелы и вопросы для интервью</li>
+        <li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 text-xs">✓</span>Модель работает на вашем сервере — данные не уходят в облако</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

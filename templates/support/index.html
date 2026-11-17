@@ -1,0 +1,65 @@
+{% extends "app.html" %}
+{% block title %}Поддержка{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight">Поддержка</h1>
+    <p class="mt-1 text-sm text-slate-500">Ответы на частые вопросы и связь с командой Screenly</p>
+  </div>
+  <span class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-slate-600 ring-1 ring-slate-200">
+    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Отвечаем в течение рабочего дня
+  </span>
+</div>
+
+<div class="mt-8 grid gap-6 lg:grid-cols-5">
+  <div class="space-y-6 lg:col-span-3">
+    <div class="card">
+      <h2 class="border-b border-slate-100 p-5 font-semibold">Частые вопросы</h2>
+      <div class="divide-y divide-slate-100">
+        {% for q, a in faq %}
+        <details class="group p-5">
+          <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-900">
+            {{ q }}
+            <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-500 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">{{ a }}</p>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="border-b border-slate-100 p-5 font-semibold">Мои обращения</h2>
+      {% for t in tickets %}
+      <div class="border-b border-slate-100 p-5 last:border-0">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <p class="text-sm font-semibold">#{{ t.pk }} · {{ t.subject }}</p>
+          <span class="rounded-full px-2.5 py-1 text-xs font-medium
+            {% if t.status == 'answered' %}bg-emerald-50 text-emerald-700{% elif t.status == 'closed' %}bg-slate-100 text-slate-500{% else %}bg-amber-50 text-amber-700{% endif %}">{{ t.get_status_display }}</span>
+        </div>
+        <p class="mt-1 text-xs text-slate-400">{{ t.get_category_display }} · {{ t.created_at|date:"j E, H:i" }}</p>
+        <p class="mt-3 whitespace-pre-line text-sm text-slate-700">{{ t.message }}</p>
+        {% if t.answer %}
+        <div class="mt-3 rounded-xl bg-indigo-50 p-4 text-sm text-indigo-900">
+          <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">Ответ поддержки</p>
+          <p class="whitespace-pre-line">{{ t.answer }}</p>
+        </div>
+        {% endif %}
+      </div>
+      {% empty %}
+      <p class="p-5 text-sm text-slate-500">Обращений пока нет.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <form method="post" class="h-fit space-y-5 card p-6 lg:sticky lg:top-24 lg:col-span-2">
+    {% csrf_token %}
+    <div>
+      <h2 class="font-semibold">Написать в поддержку</h2>
+      <p class="mt-1 text-sm text-slate-500">Опишите проблему — мы ответим здесь же.</p>
+    </div>
+    {% for field in form %}{% include "partials/field.html" %}{% endfor %}
+    <button class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Отправить</button>
+  </form>
+</div>
+{% endblock %}

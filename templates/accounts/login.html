@@ -1,0 +1,6 @@
+{% extends "accounts/_auth_layout.html" %}
+{% block title %}Вход{% endblock %}
+{% block heading %}С возвращением{% endblock %}
+{% block subheading %}Войдите, чтобы продолжить разбор кандидатов.{% endblock %}
+{% block submit %}Войти{% endblock %}
+{% block footer %}Нет аккаунта? <a href="{% url 'signup' %}" class="font-semibold text-indigo-600 hover:text-indigo-500">Зарегистрироваться</a>{% endblock %}

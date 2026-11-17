@@ -1,0 +1,44 @@
+{% load ui %}
+{% if candidates %}
+<div class="grid gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
+  {% for c in candidates %}
+  <a href="{% url 'candidate_detail' c.pk %}" class="group flex flex-col rounded-2xl bg-white p-5 ring-1 ring-slate-900/[.06] transition hover:-translate-y-0.5 hover:shadow-lift hover:ring-indigo-200 {% if c.decision == 'rejected' %}opacity-70{% endif %}">
+    <div class="flex items-start gap-3.5">
+      <span class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-to-br {{ c.display_name|avatar }} text-base font-semibold text-white shadow-sm {% if c.decision == 'rejected' %}grayscale{% endif %}">{{ c.display_name|initials }}</span>
+      <div class="min-w-0 flex-1">
+        <p class="font-semibold leading-snug group-hover:text-indigo-600">{{ c.display_name }}</p>
+        <p class="mt-0.5 text-sm leading-snug text-slate-600">{{ c.position|default:"Должность не указана" }}</p>
+      </div>
+      {% include "partials/score_badge.html" with score=c.score %}
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+      {% if c.age %}<span class="inline-flex items-center gap-1"><svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4 21a8 8 0 0116 0"/></svg>{{ c.age_label }}</span>{% endif %}
+      {% if c.city %}<span class="inline-flex items-center gap-1"><svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>{{ c.city }}</span>{% endif %}
+      {% if c.experience_label %}<span class="inline-flex items-center gap-1"><svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>{{ c.experience_label }}</span>{% endif %}
+    </div>
+
+    {% if c.skills %}
+    <div class="mt-3 flex flex-wrap gap-1.5">
+      {% for s in c.skills|slice:":6" %}<span class="rounded-md bg-slate-50 px-2 py-0.5 text-xs font-medium text-slate-700 ring-1 ring-inset ring-slate-200">{{ s }}</span>{% endfor %}
+      {% if c.skills|length > 6 %}<span class="px-1 py-0.5 text-xs text-slate-400">+{{ c.skills|length|add:"-6" }}</span>{% endif %}
+    </div>
+    {% elif c.processing == 'error' %}
+    <p class="mt-3 text-xs text-rose-600">{{ c.error }}</p>
+    {% elif c.is_active %}
+    <p class="mt-3 flex items-center gap-1.5 text-xs text-indigo-600"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-500"></span>ИИ анализирует резюме…</p>
+    {% endif %}
+
+    <div class="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-3" style="margin-top: 1rem">
+      <span class="flex min-w-0 items-center gap-1.5 text-xs text-slate-500">
+        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br {{ c.vacancy.title|avatar }}"></span>
+        <span class="truncate">{{ c.vacancy.title }}</span>
+      </span>
+      {% include "partials/decision_pill.html" %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="px-6 py-16 text-center text-sm text-slate-500">Никого не найдено — попробуйте изменить поиск.</p>
+{% endif %}

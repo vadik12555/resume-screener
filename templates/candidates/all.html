@@ -1,0 +1,29 @@
+{% extends "app.html" %}
+{% block title %}Кандидаты{% endblock %}
+{% block content %}
+<div>
+  <p class="eyebrow">База кандидатов</p>
+  <h1 class="mt-1 text-[28px] font-bold tracking-tight">Кандидаты</h1>
+  <p class="mt-1 text-sm text-slate-500">Все, кто откликался на ваши вакансии, — в одном месте.</p>
+</div>
+
+<div class="card mt-8 overflow-hidden">
+  <form class="flex flex-wrap items-center gap-3 border-b border-slate-100 p-4"
+        hx-get="{% url 'candidates_all' %}" hx-target="#rows" hx-trigger="input changed delay:300ms, change">
+    <div class="relative min-w-[220px] flex-1">
+      <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+      <input type="search" name="q" value="{{ q }}" placeholder="Имя, должность, город или навык — например, Django"
+             class="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm outline-none focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100">
+    </div>
+    <select name="vacancy" class="rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm">
+      <option value="">Все вакансии</option>
+      {% for v in vacancies %}<option value="{{ v.pk }}">{{ v.title }}</option>{% endfor %}
+    </select>
+    <select name="decision" class="rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm">
+      <option value="">Все статусы</option>
+      {% for value, label in decisions %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+    </select>
+  </form>
+  <div id="rows" class="bg-slate-50/50">{% include "candidates/_all_rows.html" %}</div>
+</div>
+{% endblock %}

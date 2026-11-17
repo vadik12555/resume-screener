@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block body %}
+<div class="relative overflow-hidden bg-white">
+  <div class="pointer-events-none absolute inset-x-0 -top-40 h-[36rem] bg-gradient-to-b from-indigo-100/70 via-violet-50/40 to-transparent"></div>
+
+  <header class="relative mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
+    {% include "partials/logo.html" %}
+    <div class="flex items-center gap-2 text-sm font-medium">
+      <a href="{% url 'login' %}" class="rounded-lg px-4 py-2 text-slate-600 hover:text-slate-900">Войти</a>
+      <a href="{% url 'signup' %}" class="rounded-lg bg-slate-900 px-4 py-2 text-white shadow-sm hover:bg-slate-700">Начать бесплатно</a>
+    </div>
+  </header>
+
+  <section class="relative mx-auto max-w-6xl px-6 pb-20 pt-12 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">
+    <div>
+      <span class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white px-3 py-1 text-xs font-medium text-indigo-700">
+        <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span> Работает на локальной LLM — без облака и ключей
+      </span>
+      <h1 class="mt-6 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+        Разбор 100 резюме — <span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">за обед, а не за неделю</span>
+      </h1>
+      <p class="mt-5 text-lg leading-relaxed text-slate-600">
+        Загрузите пачку PDF и DOCX — Screenly оценит каждого кандидата по требованиям вакансии,
+        покажет сильные стороны, пробелы и подготовит вопросы для собеседования.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="{% url 'signup' %}" class="rounded-xl bg-indigo-600 px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-600/25 hover:bg-indigo-500">Создать аккаунт</a>
+        <a href="#how" class="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50">Как это работает</a>
+      </div>
+    </div>
+
+    <div class="mt-14 lg:mt-0">
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-900/10">
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Вакансия</p>
+            <p class="font-semibold">Python-разработчик (Middle)</p>
+          </div>
+          <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">8 из 8 обработано</span>
+        </div>
+        <ul class="divide-y divide-slate-100">
+          <li class="flex items-center gap-3 py-3"><span class="w-5 text-sm text-slate-400">1</span><span class="grid h-9 w-9 place-items-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">АС</span><div class="flex-1"><p class="text-sm font-medium">Алексей Смирнов</p><p class="text-xs text-slate-500">5 лет Django, DRF, Celery</p></div><span class="rounded-full bg-emerald-50 px-2.5 py-1 text-sm font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">92</span></li>
+          <li class="flex items-center gap-3 py-3"><span class="w-5 text-sm text-slate-400">2</span><span class="grid h-9 w-9 place-items-center rounded-full bg-violet-100 text-sm font-semibold text-violet-700">МК</span><div class="flex-1"><p class="text-sm font-medium">Мария Ковалёва</p><p class="text-xs text-slate-500">FastAPI → Django, PostgreSQL</p></div><span class="rounded-full bg-emerald-50 px-2.5 py-1 text-sm font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">84</span></li>
+          <li class="flex items-center gap-3 py-3"><span class="w-5 text-sm text-slate-400">3</span><span class="grid h-9 w-9 place-items-center rounded-full bg-amber-100 text-sm font-semibold text-amber-700">ИП</span><div class="flex-1"><p class="text-sm font-medium">Иван Петров</p><p class="text-xs text-slate-500">Junior, pet-проекты</p></div><span class="rounded-full bg-amber-50 px-2.5 py-1 text-sm font-semibold text-amber-700 ring-1 ring-inset ring-amber-600/20">55</span></li>
+          <li class="flex items-center gap-3 py-3"><span class="w-5 text-sm text-slate-400">4</span><span class="grid h-9 w-9 place-items-center rounded-full bg-rose-100 text-sm font-semibold text-rose-700">АЛ</span><div class="flex-1"><p class="text-sm font-medium">Анна Лебедева</p><p class="text-xs text-slate-500">Frontend, React</p></div><span class="rounded-full bg-rose-50 px-2.5 py-1 text-sm font-semibold text-rose-700 ring-1 ring-inset ring-rose-600/20">18</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative border-t border-slate-100 bg-slate-50/60">
+    <div class="mx-auto grid max-w-6xl gap-6 px-6 py-16 sm:grid-cols-3">
+      <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-xl">📄</div>
+        <h3 class="font-semibold">Пачкой, в фоне</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">Загрузите десятки PDF и DOCX разом. Обработка идёт в фоне, прогресс виден в реальном времени.</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-violet-50 text-xl">🎯</div>
+        <h3 class="font-semibold">Оценка по требованиям</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">Балл 0–100 с учётом обязательных и желательных навыков, сильные стороны и пробелы.</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-emerald-50 text-xl">🔒</div>
+        <h3 class="font-semibold">Данные остаются у вас</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">Модель работает локально в Docker. Персональные данные кандидатов не уходят в облако.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="mx-auto max-w-6xl px-6 py-20">
+    <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Как это работает</p>
+    <h2 class="mt-2 text-3xl font-bold tracking-tight">Три шага от откликов до шорт-листа</h2>
+    <div class="mt-10 grid gap-8 sm:grid-cols-3">
+      <div>
+        <span class="grid h-10 w-10 place-items-center rounded-full bg-indigo-600 font-bold text-white">1</span>
+        <h3 class="mt-4 font-semibold">Опишите вакансию</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">Укажите обязательные навыки и те, что будут плюсом. Именно по ним модель сопоставляет кандидатов.</p>
+      </div>
+      <div>
+        <span class="grid h-10 w-10 place-items-center rounded-full bg-indigo-600 font-bold text-white">2</span>
+        <h3 class="mt-4 font-semibold">Загрузите резюме</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">Перетащите все PDF и DOCX разом. Текст извлекается автоматически, анализ идёт в фоне.</p>
+      </div>
+      <div>
+        <span class="grid h-10 w-10 place-items-center rounded-full bg-indigo-600 font-bold text-white">3</span>
+        <h3 class="mt-4 font-semibold">Работайте с рейтингом</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">Фильтруйте по баллу, приглашайте лучших, выгружайте шорт-лист в Excel для команды.</p>
+      </div>
+    </div>
+    <div class="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-slate-900 px-8 py-10 text-white">
+      <div>
+        <p class="text-2xl font-bold">Готовы ускорить найм?</p>
+        <p class="mt-1 text-slate-400">Регистрация занимает минуту.</p>
+      </div>
+      <a href="{% url 'signup' %}" class="rounded-xl bg-white px-6 py-3 font-semibold text-slate-900 hover:bg-indigo-50">Создать аккаунт</a>
+    </div>
+  </section>
+
+  <footer class="border-t border-slate-100">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-6 py-8 text-sm text-slate-400">
+      <span>© {% now "Y" %} Screenly</span>
+      <span>Django · Celery · Ollama · HTMX</span>
+    </div>
+  </footer>
+</div>
+{% endblock %}
